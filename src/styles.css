@@ -1,0 +1,209 @@
+:root {
+  --fvn-bar-height: 56px;
+  --fvn-border: #d7dce3;
+  --fvn-bg: #ffffff;
+  --fvn-fg: #1f2933;
+  --fvn-muted: #6b7684;
+  --fvn-accent: #0b6bcb;
+  --fvn-warn: #b45309;
+  --fvn-over: #c0392b;
+  --fvn-flag-left: #c0392b;
+  --fvn-flag-right: #0b6bcb;
+}
+
+body.fvn-active {
+  padding-bottom: calc(var(--fvn-bar-height) + 12px);
+}
+
+#fvn-bar {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--fvn-bar-height);
+  padding: 6px 12px;
+  background: var(--fvn-bg);
+  border-top: 1px solid var(--fvn-border);
+  box-shadow: 0 -2px 10px rgb(15 23 42 / 8%);
+  color: var(--fvn-fg);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+#fvn-bar .fvn-group {
+  display: flex;
+  gap: 4px;
+}
+
+#fvn-bar .fvn-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  min-width: 74px;
+  padding: 5px 8px;
+  border: 1px solid var(--fvn-border);
+  border-radius: 6px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+#fvn-bar .fvn-badge:hover {
+  border-color: var(--fvn-accent);
+}
+
+#fvn-bar .fvn-badge-main {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+#fvn-bar .fvn-badge-sub {
+  color: var(--fvn-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+#fvn-bar .fvn-badge.fvn-selected {
+  border-color: var(--fvn-accent);
+  background: #e8f1fc;
+}
+
+#fvn-bar .fvn-badge.fvn-tight .fvn-badge-sub {
+  color: var(--fvn-warn);
+  font-weight: 700;
+}
+
+#fvn-bar .fvn-badge.fvn-over {
+  border-color: var(--fvn-over);
+}
+
+#fvn-bar .fvn-badge.fvn-over .fvn-badge-sub {
+  color: var(--fvn-over);
+  font-weight: 700;
+}
+
+#fvn-bar .fvn-badge-flag {
+  min-width: 56px;
+}
+
+#fvn-bar .fvn-badge-flag .fvn-badge-main {
+  display: inline-block;
+  font-size: 14px;
+}
+
+#fvn-bar .fvn-badge-flag[data-flag='left'] .fvn-badge-main {
+  transform: scaleX(-1);
+  color: var(--fvn-flag-left);
+}
+
+#fvn-bar .fvn-badge-flag[data-flag='right'] .fvn-badge-main {
+  color: var(--fvn-flag-right);
+}
+
+#fvn-bar .fvn-preset {
+  padding: 4px 6px;
+  border: 1px solid var(--fvn-border);
+  border-radius: 6px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+
+#fvn-bar .fvn-clear {
+  padding: 5px 10px;
+  border: 1px solid var(--fvn-border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--fvn-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+#fvn-bar .fvn-position {
+  color: var(--fvn-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+#fvn-bar .fvn-spacer {
+  flex: 1;
+}
+
+#fvn-bar .fvn-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  cursor: pointer;
+}
+
+#fvn-bar .fvn-hint {
+  color: var(--fvn-muted);
+}
+
+/* ------------------------------------------------------ プロポーザル側 */
+
+.proposal4staffvote.fvn-hidden {
+  display: none !important;
+}
+
+.proposal4staffvote.fvn-flag-left,
+.proposal4staffvote.fvn-flag-right {
+  padding-left: 12px;
+}
+
+.proposal4staffvote.fvn-flag-left {
+  box-shadow: inset 4px 0 0 var(--fvn-flag-left);
+}
+
+.proposal4staffvote.fvn-flag-right {
+  box-shadow: inset 4px 0 0 var(--fvn-flag-right);
+}
+
+.proposal4staffvote.fvn-flag-left.fvn-flag-right {
+  box-shadow: inset 4px 0 0 var(--fvn-flag-left), inset 8px 0 0 var(--fvn-flag-right);
+}
+
+.proposal4staffvote.fvn-flag-left .title::before {
+  content: '⚑';
+  display: inline-block;
+  margin-right: 6px;
+  transform: scaleX(-1);
+  color: var(--fvn-flag-left);
+}
+
+.proposal4staffvote.fvn-flag-right .title::after {
+  content: '⚑';
+  margin-left: 6px;
+  color: var(--fvn-flag-right);
+}
+
+.fvn-chip {
+  display: inline-block;
+  min-width: 30px;
+  margin-right: 8px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #eef1f5;
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.fvn-chip[data-score='2'] { background: #0b6bcb; color: #fff; }
+.fvn-chip[data-score='1'] { background: #cfe3f9; color: #0b4f96; }
+.fvn-chip[data-score='0'] { background: #eef1f5; color: #4b5563; }
+.fvn-chip[data-score='-1'] { background: #fbe2de; color: #9b2c1c; }
+.fvn-chip[data-score='-2'] { background: #c0392b; color: #fff; }
+.fvn-chip[data-score='none'] { background: #fff4d6; color: #92400e; }
+
+/** 矢印キーで動かしている最中の、まだ確定していないスコア */
+.fvn-chip.fvn-chip-pending {
+  outline: 2px dashed #f59e0b;
+  outline-offset: 1px;
+}

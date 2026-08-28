@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.zip
+.DS_Store
+
+# 投票ページから採取したフィクスチャ・スクリーンショットは
+# 採択前のCfP本文を含むため、リポジトリには入れない
+fixtures/local/
+screenshots/

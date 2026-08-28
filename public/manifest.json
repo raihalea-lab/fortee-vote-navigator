@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "fortee Vote Navigator",
+  "version": "0.2.0",
+  "description": "fortee のスタッフ投票ページに、投票状況サマリー・スコアフィルタ・2種類のフラグ・キー操作テンプレートを追加します。",
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://fortee.jp/*/organizer/proposals/vote/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "fortee-vote-navigator",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Chrome extension that makes fortee staff voting (CfP scoring) easier to navigate",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "watch": "vite build --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node test/smoke.mjs"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.287",
+    "@types/node": "^22.20.1",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}
