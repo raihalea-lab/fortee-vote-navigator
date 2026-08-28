@@ -1,18 +1,35 @@
 name: CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
   pull_request:
+
+# GITHUB_TOKEN は読み取りだけあれば足りる
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # サプライチェーン対策: action はタグではなくコミット SHA で固定する。
+      # タグは付け替えられるが SHA は付け替えられない。更新は Dependabot に任せる
+      # （末尾のバージョンコメントを Dependabot が読んで書き換える）。
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+
+      # --ignore-scripts: 依存パッケージの postinstall などを実行しない。
+      # 汚染された依存が最初に動くのがここなので、塞いでおく。
+      - run: npm ci --ignore-scripts
       - run: npm test
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fortee-vote-navigator
+          path: dist/
+          if-no-files-found: error

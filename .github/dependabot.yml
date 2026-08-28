@@ -1,0 +1,13 @@
+version: 2
+
+# SHA 固定した action と lockfile を放置すると古いまま腐るので、更新は Dependabot に任せる。
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
