@@ -1,13 +1,21 @@
 version: 2
 
 # SHA 固定した action と lockfile を放置すると古いまま腐るので、更新は Dependabot に任せる。
+# cooldown は .npmrc の min-release-age と対になる設定。Dependabot は npm の
+# 設定を読まないので、出たてのバージョンを避けたければこちらにも書く必要がある。
 updates:
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 7
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
