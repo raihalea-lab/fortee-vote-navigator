@@ -83,7 +83,10 @@ function renderChip(el: HTMLElement): void {
 
   const isPending = pending !== null && pending.el === el;
   const score = isPending ? pending!.score : readScore(el);
-  chip.textContent = score === null ? '未' : scoreLabel(score);
+  // textContent への代入は同じ値でもテキストノードを作り直し、
+  // MutationObserver → render → ここ、の無限ループになる。変化したときだけ書く。
+  const text = score === null ? '未' : scoreLabel(score);
+  if (chip.textContent !== text) chip.textContent = text;
   chip.dataset.score = score === null ? 'none' : String(score);
   chip.classList.toggle('fvn-chip-pending', isPending);
 }
@@ -203,7 +206,10 @@ function commitPending(): void {
   pending = null;
   if (!target) return;
 
-  if (readScore(target.el) === target.score) renderChip(target.el);
+  const current = readScore(target.el);
+  // 未採点のまま 0 に戻ってきた場合は「取り消し」とみなして投票しない。
+  // ponytail: 未採点から矢印だけで 0 を付けることはできなくなる（fortee 側の 3 キー / 0 ボタンを使う）
+  if (current === target.score || (current === null && target.score === 0)) renderChip(target.el);
   else clickScore(target.el, target.score);
 }
 
@@ -334,8 +340,20 @@ function setPreset(preset: Preset): void {
   render();
 }
 
+/** ページは Vue 製なので、document_idle の時点でまだ一覧が描画されていないことがある */
+function waitForProposals(): Promise<void> {
+  return new Promise((resolve) => {
+    const observer = new MutationObserver(() => {
+      if (listProposals().length === 0) return;
+      observer.disconnect();
+      resolve();
+    });
+    observer.observe(document.body, { subtree: true, childList: true });
+  });
+}
+
 async function main(): Promise<void> {
-  if (listProposals().length === 0) return;
+  if (listProposals().length === 0) await waitForProposals();
 
   [flags, settings] = await Promise.all([loadFlags(), loadSettings()]);
   for (const el of listProposals()) previousScores.set(el, readScore(el));
