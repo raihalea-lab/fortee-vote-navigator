@@ -3,21 +3,6 @@ export type Score = 2 | 1 | 0 | -1 | -2;
 /** 採点ボタンは画面上、左から +2, +1, 0, -1, -2 の順に並んでいる */
 export const SCORES: readonly Score[] = [2, 1, 0, -1, -2] as const;
 
-/**
- * 配分の目安（この割合を超えないことを目指す）。
- *
- * 目安はイベントごとに運営から提示されるもので、共通の基準があるわけではない。
- * ここにあるのはあくまで初期値なので、**自分のイベントの指示に合わせて書き換えてから
- * ビルドすること**。キーを消せばそのスコアは件数と割合だけの表示になる。
- * 0 点には上限がないため含めていない。
- */
-export const QUOTA_RATIO: Readonly<Record<string, number>> = {
-  '2': 0.1,
-  '1': 0.3,
-  '-1': 0.1,
-  '-2': 0.05,
-};
-
 export function scoreLabel(score: Score): string {
   return score > 0 ? `+${score}` : `${score}`;
 }

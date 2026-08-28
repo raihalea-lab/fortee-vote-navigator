@@ -4,7 +4,6 @@ import {
   FLAG_LABEL,
   PRESET_HINT,
   PRESET_LABEL,
-  QUOTA_RATIO,
   SCORES,
   scoreLabel,
   type FlagKind,
@@ -148,18 +147,8 @@ export function renderBar(state: BarState): void {
     const button = scoreBadges.get(score)!;
     const count = state.counts.get(score) ?? 0;
     const ratio = state.total > 0 ? Math.round((count / state.total) * 100) : 0;
-    const quotaRatio = QUOTA_RATIO[String(score)];
 
-    let sub = `${count}件 ${ratio}%`;
-    button.classList.remove('fvn-over', 'fvn-tight');
-    if (quotaRatio !== undefined) {
-      const cap = Math.floor(state.total * quotaRatio);
-      const left = cap - count;
-      sub = `${count}/${cap} ${left >= 0 ? `残り${left}` : `超過${-left}`}`;
-      if (left < 0) button.classList.add('fvn-over');
-      else if (left === 0) button.classList.add('fvn-tight');
-    }
-    setBadge(button, scoreLabel(score), sub);
+    setBadge(button, scoreLabel(score), `${count}件 ${ratio}%`);
     button.classList.toggle('fvn-selected', state.selectedScores.has(score));
   }
 

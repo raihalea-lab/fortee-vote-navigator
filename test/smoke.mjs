@@ -59,10 +59,8 @@ await tick();
 /* ------------------------------------------------------------- サマリー */
 
 assert.ok(bar(), 'サマリーバーが挿入される');
-assert.match(badgeOf(2).textContent, /2\/1 /, '+2 は 10% = 上限1件に対して2件で超過');
-assert.ok(badgeOf(2).classList.contains('fvn-over'), '上限超過は fvn-over が付く');
-assert.match(badgeOf(1).textContent, /3\/3 残り0/, '+1 は 30% = 上限3件ちょうど');
-assert.ok(badgeOf(1).classList.contains('fvn-tight'), '上限ちょうどは fvn-tight が付く');
+assert.match(badgeOf(2).textContent, /2件 20%/, '+2 は 2件 = 全体の20%');
+assert.match(badgeOf(1).textContent, /3件 30%/, '+1 は 3件 = 全体の30%');
 
 const chips = [...document.querySelectorAll('.fvn-chip')].map((c) => c.textContent);
 assert.equal(chips.length, scores.length, '全プロポーザルにスコアチップが付く');
@@ -130,7 +128,7 @@ const before = document.querySelector('.proposal4staffvote.active');
 castVote(before, -2); // ページ側の数字キーで採点した場合を模す
 await tick(400);
 assert.equal(activeTitle(), 'ダミーセッション 10', '採点後に次へ進む');
-assert.match(badgeOf(-2).textContent, /2\//, '採点がサマリーに反映される');
+assert.match(badgeOf(-2).textContent, /2件/, '採点がサマリーに反映される');
 
 /* ------------------------------------------------- 矢印キープリセット */
 

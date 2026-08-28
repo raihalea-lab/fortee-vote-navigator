@@ -5,8 +5,6 @@
   --fvn-fg: #1f2933;
   --fvn-muted: #6b7684;
   --fvn-accent: #0b6bcb;
-  --fvn-warn: #b45309;
-  --fvn-over: #c0392b;
   --fvn-flag-left: #c0392b;
   --fvn-flag-right: #0b6bcb;
 }
@@ -72,19 +70,8 @@ body.fvn-active {
   background: #e8f1fc;
 }
 
-#fvn-bar .fvn-badge.fvn-tight .fvn-badge-sub {
-  color: var(--fvn-warn);
-  font-weight: 700;
-}
 
-#fvn-bar .fvn-badge.fvn-over {
-  border-color: var(--fvn-over);
-}
 
-#fvn-bar .fvn-badge.fvn-over .fvn-badge-sub {
-  color: var(--fvn-over);
-  font-weight: 700;
-}
 
 #fvn-bar .fvn-badge-flag {
   min-width: 56px;
