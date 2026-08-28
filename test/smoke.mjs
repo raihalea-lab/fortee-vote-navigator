@@ -32,6 +32,14 @@ window.chrome = {
   },
 };
 
+// 再描画が無限ループしていないかを見るため、rAF の呼び出し回数を数えておく
+let rafCount = 0;
+const rawRaf = window.requestAnimationFrame.bind(window);
+window.requestAnimationFrame = (cb) => {
+  rafCount += 1;
+  return rawRaf(cb);
+};
+
 window.eval(bundle);
 
 const tick = (ms = 30) => new Promise((resolve) => window.setTimeout(resolve, ms));
@@ -170,6 +178,26 @@ assert.equal(activeTitle(), 'ダミーセッション 7', '↓ で次のプロ�
 press('ArrowUp');
 await tick();
 assert.equal(activeTitle(), 'ダミーセッション 6', '↑ で前のプロポーザルへ移動する');
+
+/* ------------------------------------------------- 未採点の取り消し */
+
+const unscored = proposals()[8];
+castVote(unscored, null); // ページ側で未採点の状態を作る
+focus(8);
+await tick();
+votes.clicks = 0;
+press('ArrowLeft');
+press('ArrowRight');
+await tick(400);
+assert.equal(votes.clicks, 0, '未採点で ←→ と戻したら投票しない');
+assert.equal(unscored.querySelector('.fvn-chip').textContent, '未', 'チップも未採点のまま');
+
+/* ------------------------------------------------- 再描画ループの停止 */
+
+await tick(100);
+const rafBefore = rafCount;
+await tick(200);
+assert.equal(rafCount, rafBefore, 'アイドル時に MutationObserver → render のループが回らない');
 
 console.log('smoke: all assertions passed');
 
