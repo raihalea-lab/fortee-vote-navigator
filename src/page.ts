@@ -61,7 +61,7 @@ export function focusProposal(el: HTMLElement): void {
   el.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
 
-/** URL の先頭セグメント（例: jawsfesta-2026）。イベントごとに保存領域を分けるために使う */
+/** URL の先頭セグメント（例: my-conf-2026）。イベントごとに保存領域を分けるために使う */
 export function conferenceSlug(): string {
   return location.pathname.split('/').filter(Boolean)[0] ?? 'unknown';
 }
