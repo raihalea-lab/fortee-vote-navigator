@@ -39,4 +39,4 @@ export interface Settings {
   preset: Preset;
 }
 
-export const DEFAULT_SETTINGS: Settings = { autoAdvance: true, preset: 'fortee' };
+export const DEFAULT_SETTINGS: Settings = { autoAdvance: false, preset: 'arrows' };

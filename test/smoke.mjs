@@ -121,22 +121,31 @@ click(bar().querySelector('.fvn-clear'));
 await tick();
 assert.equal(visible().length, scores.length, 'フィルタ解除で全件表示に戻る');
 
+/* ------------------------------------------------------------- 初期設定 */
+
+const autoAdvance = bar().querySelector('.fvn-toggle input');
+const preset = bar().querySelector('.fvn-preset');
+const setAutoAdvance = (on) => {
+  autoAdvance.checked = on;
+  autoAdvance.dispatchEvent(new window.Event('change', { bubbles: true }));
+};
+
+assert.equal(preset.value, 'arrows', '初期の操作テンプレートは矢印キー');
+assert.equal(autoAdvance.checked, false, '「採点したら次へ」は初期状態では無効');
+
 /* --------------------------------------------------- 採点したら次へ進む */
 
+setAutoAdvance(true);
 focus(8);
 const before = document.querySelector('.proposal4staffvote.active');
 castVote(before, -2); // ページ側の数字キーで採点した場合を模す
 await tick(400);
-assert.equal(activeTitle(), 'ダミーセッション 10', '採点後に次へ進む');
+assert.equal(activeTitle(), 'ダミーセッション 10', '有効にすれば採点後に次へ進む');
 assert.match(badgeOf(-2).textContent, /2件/, '採点がサマリーに反映される');
 
 /* ------------------------------------------------- 矢印キープリセット */
 
-const autoAdvance = bar().querySelector('.fvn-toggle input');
-autoAdvance.checked = false;
-autoAdvance.dispatchEvent(new window.Event('change', { bubbles: true }));
-
-const preset = bar().querySelector('.fvn-preset');
+setAutoAdvance(false);
 preset.value = 'arrows';
 preset.dispatchEvent(new window.Event('change', { bubbles: true }));
 await tick();

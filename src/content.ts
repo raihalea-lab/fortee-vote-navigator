@@ -13,6 +13,7 @@ import {
 } from './page';
 import { emptyFlags, loadFlags, loadSettings, saveFlags, saveSettings, type FlagSets } from './storage';
 import {
+  DEFAULT_SETTINGS,
   FLAG_KINDS,
   SCORES,
   scoreLabel,
@@ -35,7 +36,7 @@ const COMMIT_DELAY_MS = 350;
 const FLAG_KEY: Record<string, FlagKind> = { z: 'left', x: 'right' };
 
 let flags: FlagSets = emptyFlags();
-let settings: Settings = { autoAdvance: true, preset: 'fortee' };
+let settings: Settings = DEFAULT_SETTINGS;
 const selectedScores = new Set<Score>();
 const selectedFlags = new Set<FlagKind>();
 
