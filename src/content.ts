@@ -1,5 +1,5 @@
 import './styles.css';
-import { mountBar, renderBar, type BarState } from './bar';
+import { mountBar, renderBar, toggleHelp, type BarState } from './bar';
 import {
   activeProposal,
   clickScore,
@@ -260,6 +260,17 @@ function onKeyDown(event: KeyboardEvent): void {
     event.preventDefault();
     event.stopPropagation();
   };
+
+  if (event.key === '?') {
+    stop();
+    toggleHelp();
+    return;
+  }
+  // Escape はページ側にも渡す（拡張が握り潰すと他の操作を妨げるので）
+  if (event.key === 'Escape') {
+    toggleHelp(false);
+    return;
+  }
 
   const flagKind = FLAG_KEY[key];
   if (flagKind) {

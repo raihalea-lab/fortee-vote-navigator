@@ -2,9 +2,10 @@
 import {
   FLAG_KINDS,
   FLAG_LABEL,
-  PRESET_HINT,
+  PRESET_KEYS,
   PRESET_LABEL,
   SCORES,
+  presetHint,
   scoreLabel,
   type FlagKind,
   type Preset,
@@ -34,6 +35,19 @@ export interface BarCallbacks {
 
 let root: HTMLElement | null = null;
 const scoreBadges = new Map<Score, HTMLButtonElement>();
+let helpPanel: HTMLElement | null = null;
+let helpButton: HTMLButtonElement | null = null;
+let helpKeysEl: HTMLElement | null = null;
+
+/** キー操作だけでは分からない、画面の読み方 */
+const HELP_NOTES: readonly string[] = [
+  'スコアのバッジをクリックすると、その点数を付けたものだけ表示します（複数選べます）。',
+  'バッジの「3件 30%」は、その点数の件数と全体に対する割合です。',
+  'タイトル横のチップが今の点数です。「未」はまだ採点していないもの。',
+  'チップが点線枠のときは確定待ちです。最後の入力から350ms後に投票します。',
+  '旗は2種類あります。意味づけは自由です（「よかったかも」「あとで確認」など）。',
+  'フィルタ中は j / k でも、隠れているプロポーザルを飛ばして移動できます。',
+];
 const flagBadges = new Map<FlagKind, HTMLButtonElement>();
 let clearButton: HTMLButtonElement;
 let positionEl: HTMLElement;
@@ -61,6 +75,43 @@ function badge(main: string, sub: string): HTMLButtonElement {
 function setBadge(button: HTMLButtonElement, main: string, sub: string): void {
   button.querySelector('.fvn-badge-main')!.textContent = main;
   button.querySelector('.fvn-badge-sub')!.textContent = sub;
+}
+
+/** ヘルプパネルを組み立てる。キー表の中身は renderBar でプリセットに合わせて差し替える */
+function buildHelp(): HTMLElement {
+  const panel = document.createElement('div');
+  panel.className = 'fvn-help';
+  panel.hidden = true;
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-label', '使い方');
+
+  const title = document.createElement('h2');
+  title.className = 'fvn-help-title';
+  title.textContent = '使い方';
+  panel.append(title);
+
+  helpKeysEl = document.createElement('dl');
+  helpKeysEl.className = 'fvn-help-keys';
+  panel.append(helpKeysEl);
+
+  const notes = document.createElement('ul');
+  notes.className = 'fvn-help-notes';
+  for (const note of HELP_NOTES) {
+    const item = document.createElement('li');
+    item.textContent = note;
+    notes.append(item);
+  }
+  panel.append(notes);
+
+  return panel;
+}
+
+/** 使い方パネルの開閉。open を省くとトグル */
+export function toggleHelp(open?: boolean): void {
+  if (!helpPanel || !helpButton) return;
+  const next = open ?? helpPanel.hidden;
+  helpPanel.hidden = !next;
+  helpButton.setAttribute('aria-expanded', String(next));
 }
 
 export function mountBar(callbacks: BarCallbacks): void {
@@ -136,6 +187,18 @@ export function mountBar(callbacks: BarCallbacks): void {
   hintEl.className = 'fvn-hint';
   root.append(hintEl);
 
+  helpButton = document.createElement('button');
+  helpButton.type = 'button';
+  helpButton.className = 'fvn-help-button';
+  helpButton.textContent = '?';
+  helpButton.title = '使い方（? キーでも開けます）';
+  helpButton.setAttribute('aria-expanded', 'false');
+  helpButton.addEventListener('click', () => toggleHelp());
+  root.append(helpButton);
+
+  helpPanel = buildHelp();
+  root.append(helpPanel);
+
   document.body.append(root);
   document.body.classList.add('fvn-active');
 }
@@ -165,5 +228,18 @@ export function renderBar(state: BarState): void {
 
   autoAdvanceInput.checked = state.autoAdvance;
   presetSelect.value = state.preset;
-  hintEl.textContent = PRESET_HINT[state.preset];
+  hintEl.textContent = presetHint(state.preset);
+
+  // キー表はプリセットが変わったときだけ組み直す（renderBar は頻繁に呼ばれるので）
+  if (helpKeysEl && helpKeysEl.dataset.preset !== state.preset) {
+    helpKeysEl.dataset.preset = state.preset;
+    helpKeysEl.replaceChildren();
+    for (const { keys, action } of PRESET_KEYS[state.preset]) {
+      const dt = document.createElement('dt');
+      dt.textContent = keys;
+      const dd = document.createElement('dd');
+      dd.textContent = action;
+      helpKeysEl.append(dt, dd);
+    }
+  }
 }
