@@ -206,6 +206,44 @@ const rafBefore = rafCount;
 await tick(200);
 assert.equal(rafCount, rafBefore, 'アイドル時に MutationObserver → render のループが回らない');
 
+/* ------------------------------------------------------------- 使い方 */
+
+const help = () => bar().querySelector('.fvn-help');
+const helpButton = () => bar().querySelector('.fvn-help-button');
+const helpKeys = () => [...help().querySelectorAll('.fvn-help-keys dt')].map((d) => d.textContent);
+
+assert.equal(help().hidden, true, '使い方は初期状態では閉じている');
+assert.equal(helpButton().getAttribute('aria-expanded'), 'false', 'aria-expanded も閉じている');
+
+press('?');
+await tick();
+assert.equal(help().hidden, false, '? キーで開く');
+assert.equal(helpButton().getAttribute('aria-expanded'), 'true', '開くと aria-expanded が true');
+assert.ok(helpKeys().includes('← →'), '矢印キープリセットのキーが載る');
+assert.ok(
+  help().textContent.includes('バッジをクリック'),
+  'キー以外の画面の読み方も載る',
+);
+
+press('Escape');
+await tick();
+assert.equal(help().hidden, true, 'Escape で閉じる');
+
+click(helpButton());
+await tick();
+assert.equal(help().hidden, false, '? ボタンのクリックでも開く');
+
+// プリセットを切り替えるとキー表も入れ替わる
+preset.value = 'fortee';
+preset.dispatchEvent(new window.Event('change', { bubbles: true }));
+await tick();
+assert.ok(helpKeys().includes('j k'), 'プリセットを変えるとキー表も変わる');
+assert.ok(!helpKeys().includes('← →'), '前のプリセットのキーは消える');
+
+click(helpButton());
+await tick();
+assert.equal(help().hidden, true, '? ボタンの再クリックで閉じる');
+
 console.log('smoke: all assertions passed');
 
 dom.window.close();
